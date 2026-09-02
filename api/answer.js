@@ -1,4 +1,4 @@
-import { AkinatorClient, Languages, Themes } from 'akinator-client'
+import { AkinatorClient } from 'akinator-client'
 import supabase from './supabase.js'
 
 export default async function handler(req, res) {
@@ -9,19 +9,20 @@ export default async function handler(req, res) {
     }
 
     try {
-        const { sessionId, answer } = req.body || {}
+        const { userId, sessionId, answer } = req.body || {}
 
-        if (!sessionId || answer === undefined) {
+        if (!userId || !sessionId || answer === undefined) {
             return res.status(400).json({
                 success: false,
-                error: 'sessionId ve answer gerekli'
+                error: 'userId, sessionId ve answer gerekli'
             })
         }
 
         const { data, error } = await supabase
             .from('akinator_sessions')
-            .select('session_data')
+            .select('session_data, user_id')
             .eq('id', sessionId)
+            .eq('user_id', userId)
             .single()
 
         if (error || !data) {
@@ -35,17 +36,23 @@ export default async function handler(req, res) {
 
         const result = await aki.answer(Number(answer))
 
-        await supabase
+        const { error: updateError } = await supabase
             .from('akinator_sessions')
             .update({
                 session_data: aki.toJSON(),
                 updated_at: new Date().toISOString()
             })
             .eq('id', sessionId)
+            .eq('user_id', userId)
+
+        if (updateError) {
+            throw updateError
+        }
 
         return res.status(200).json({
             success: true,
             sessionId,
+            userId,
             question: result.question,
             answers: result.answers,
             step: result.step,
