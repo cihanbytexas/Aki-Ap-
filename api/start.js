@@ -10,6 +10,15 @@ export default async function handler(req, res) {
     }
 
     try {
+        const { userId } = req.body || {}
+
+        if (!userId) {
+            return res.status(400).json({
+                success: false,
+                error: 'userId gerekli'
+            })
+        }
+
         const aki = new AkinatorClient({
             language: Languages.Turkish,
             theme: Themes.Character
@@ -23,6 +32,7 @@ export default async function handler(req, res) {
             .from('akinator_sessions')
             .insert({
                 id: sessionId,
+                user_id: userId,
                 session_data: aki.toJSON()
             })
 
@@ -33,6 +43,7 @@ export default async function handler(req, res) {
         return res.status(200).json({
             success: true,
             sessionId,
+            userId,
             question: result.question,
             answers: result.answers,
             step: result.step,
