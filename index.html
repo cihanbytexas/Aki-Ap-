@@ -1,307 +1,1014 @@
-<!DOCTYPE html>
-<html lang="tr">
+<!DOCTYPE html><html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Akinator API Dokümantasyonu</title>
-    <style>
-        :root {
-            --bg-color: #f8fafc;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --primary: #3b82f6;
-            --card-bg: #ffffff;
-            --border: #e2e8f0;
-            --code-bg: #1e293b;
-            --code-text: #e2e8f0;
-            --post-badge: #10b981;
+    <title>Akinator API Dokümantasyonu</title><style>
+    :root {
+        --bg-color: #f8fafc;
+        --text-main: #0f172a;
+        --text-muted: #64748b;
+        --primary: #3b82f6;
+        --card-bg: #ffffff;
+        --border: #e2e8f0;
+        --code-bg: #1e293b;
+        --code-text: #e2e8f0;
+        --post-badge: #10b981;
+        --danger: #ef4444;
+        --success-bg: #ecfdf5;
+        --success-text: #065f46;
+        --warning-bg: #fef3c7;
+        --warning-text: #92400e;
+        --info-bg: #eff6ff;
+        --info-text: #1e40af;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        line-height: 1.6;
+        margin: 0;
+        padding: 40px 20px;
+    }
+
+    .container {
+        max-width: 950px;
+        margin: 0 auto;
+    }
+
+    header {
+        margin-bottom: 45px;
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+    }
+
+    header p {
+        color: var(--text-muted);
+        font-size: 1.1rem;
+        margin: 0;
+    }
+
+    .flow {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 25px;
+    }
+
+    .flow-item {
+        background: white;
+        border: 1px solid var(--border);
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+
+    .arrow {
+        color: var(--text-muted);
+        font-weight: bold;
+    }
+
+    .endpoint-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    .endpoint-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 18px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid var(--border);
+        flex-wrap: wrap;
+    }
+
+    .badge-post {
+        background-color: var(--post-badge);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        letter-spacing: 0.5px;
+    }
+
+    .endpoint-url {
+        font-family: monospace;
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+
+    h2 {
+        margin-top: 0;
+    }
+
+    h3 {
+        margin-top: 0;
+        color: var(--primary);
+        font-size: 1.2rem;
+    }
+
+    p.desc {
+        color: var(--text-muted);
+        margin-bottom: 20px;
+    }
+
+    .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    @media (max-width: 768px) {
+        .grid-2 {
+            grid-template-columns: 1fr;
         }
 
         body {
-            font-family: system-ui, -apple-system, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.6;
-            margin: 0;
-            padding: 40px 20px;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        header {
-            margin-bottom: 40px;
-            text-align: center;
+            padding: 25px 14px;
         }
 
         h1 {
-            color: var(--text-main);
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            font-size: 2rem;
         }
+    }
 
-        header p {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-        }
+    .code-block-wrapper {
+        background: var(--code-bg);
+        border-radius: 8px;
+        overflow: hidden;
+    }
 
-        .endpoint-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        }
+    .code-header {
+        background: rgba(0,0,0,0.2);
+        padding: 8px 15px;
+        font-size: 0.85rem;
+        color: #94a3b8;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
 
-        .endpoint-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border);
-        }
+    pre {
+        margin: 0;
+        padding: 15px;
+        overflow-x: auto;
+    }
 
-        .badge-post {
-            background-color: var(--post-badge);
-            color: white;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            letter-spacing: 0.5px;
-        }
+    code {
+        font-family: Consolas, Monaco, monospace;
+        color: var(--code-text);
+        font-size: 0.9rem;
+    }
 
-        .endpoint-url {
-            font-family: monospace;
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--text-main);
-        }
+    .note {
+        padding: 15px;
+        border-radius: 6px;
+        margin: 20px 0;
+        font-size: 0.95rem;
+    }
 
-        h3 {
-            margin-top: 0;
-            color: var(--primary);
-            font-size: 1.2rem;
-        }
+    .note-warning {
+        background: var(--warning-bg);
+        border-left: 4px solid #f59e0b;
+        color: var(--warning-text);
+    }
 
-        p.desc {
-            color: var(--text-muted);
-            margin-bottom: 20px;
-        }
+    .note-info {
+        background: var(--info-bg);
+        border-left: 4px solid var(--primary);
+        color: var(--info-text);
+    }
 
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
+    .note-success {
+        background: var(--success-bg);
+        border-left: 4px solid #10b981;
+        color: var(--success-text);
+    }
 
-        @media (max-width: 768px) {
-            .grid-2 {
-                grid-template-columns: 1fr;
-            }
-        }
+    .result-box {
+        background: #0f172a;
+        border-radius: 8px;
+        padding: 18px;
+        color: #e2e8f0;
+        overflow-x: auto;
+    }
 
-        .code-block-wrapper {
-            background: var(--code-bg);
-            border-radius: 8px;
-            overflow: hidden;
-        }
+    .result-box code {
+        color: #e2e8f0;
+    }
 
-        .code-header {
-            background: rgba(0,0,0,0.2);
-            padding: 8px 15px;
-            font-size: 0.85rem;
-            color: #94a3b8;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+    }
 
-        pre {
-            margin: 0;
-            padding: 15px;
-            overflow-x: auto;
-        }
+    th,
+    td {
+        text-align: left;
+        padding: 11px;
+        border-bottom: 1px solid var(--border);
+    }
 
-        code {
-            font-family: 'Consolas', 'Monaco', monospace;
-            color: var(--code-text);
-            font-size: 0.9rem;
-        }
+    th {
+        background: #f8fafc;
+        color: var(--text-muted);
+        font-weight: 600;
+    }
 
-        .note {
-            background-color: #fef3c7;
-            border-left: 4px solid #f59e0b;
-            padding: 15px;
-            border-radius: 4px;
-            margin: 20px 0;
-            color: #92400e;
-            font-size: 0.95rem;
-        }
+    td code {
+        color: #ef4444;
+        background: #fee2e2;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: monospace;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-        }
+    .status {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 5px;
+        font-size: 0.8rem;
+        font-weight: 700;
+    }
 
-        th, td {
-            text-align: left;
-            padding: 10px;
-            border-bottom: 1px solid var(--border);
-        }
+    .status-200 {
+        background: #dcfce7;
+        color: #166534;
+    }
 
-        th {
-            background: #f8fafc;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
+    .status-400 {
+        background: #fee2e2;
+        color: #991b1b;
+    }
 
-        td code {
-            color: #ef4444;
-            background: #fee2e2;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: monospace;
-        }
-    </style>
-</head>
-<body>
+    .status-409 {
+        background: #fef3c7;
+        color: #92400e;
+    }
 
-    <div class="container">
-        <header>
-            <h1>🧞‍♂️ Akinator API Dokümantasyonu</h1>
-            <p>Oyun akışı 3 temel adımdan oluşur: Başlat, Cevapla ve Sonucu Gör.</p>
-        </header>
+    .status-500 {
+        background: #fee2e2;
+        color: #991b1b;
+    }
 
-        <!-- 1. START ENDPOINT -->
-        <div class="endpoint-card">
-            <div class="endpoint-header">
-                <span class="badge-post">POST</span>
-                <span class="endpoint-url">/api/start</span>
+    .language-card {
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 18px;
+        margin-bottom: 15px;
+    }
+
+    .language-card strong {
+        font-size: 1.1rem;
+    }
+
+    footer {
+        text-align: center;
+        color: var(--text-muted);
+        margin-top: 45px;
+        font-size: 0.9rem;
+    }
+</style>
+
+</head><body><div class="container"><header>
+    <h1>🧞‍♂️ Akinator API</h1>
+
+    <p>
+        Node.js tabanlı Akinator oyun API'si.
+        Türkçe ve İngilizce dil desteği bulunur.
+    </p>
+
+    <div class="flow">
+        <div class="flow-item">1️⃣ Oyunu Başlat</div>
+        <span class="arrow">→</span>
+        <div class="flow-item">2️⃣ Cevap Ver</div>
+        <span class="arrow">→</span>
+        <div class="flow-item">🏆 Sonucu Al</div>
+    </div>
+</header>
+
+
+<!-- GENEL BILGI -->
+
+<div class="endpoint-card">
+
+    <h2>📌 API Genel Bilgileri</h2>
+
+    <p class="desc">
+        API, Akinator oyununu HTTP POST istekleri üzerinden kullanmanı sağlar.
+        Her kullanıcı aynı anda yalnızca bir aktif oyun oynayabilir.
+    </p>
+
+    <div class="note note-info">
+        <strong>Güncel sistem:</strong>
+        Artık <code>/api/result</code> endpoint'i bulunmamaktadır.
+        Akinator karakteri bildiği anda sonuç doğrudan
+        <code>/api/answer</code> üzerinden döndürülür.
+    </div>
+
+    <table>
+        <tr>
+            <th>Özellik</th>
+            <th>Bilgi</th>
+        </tr>
+
+        <tr>
+            <td>API</td>
+            <td>Akinator API</td>
+        </tr>
+
+        <tr>
+            <td>Metot</td>
+            <td><code>POST</code></td>
+        </tr>
+
+        <tr>
+            <td>Desteklenen diller</td>
+            <td>Türkçe / İngilizce</td>
+        </tr>
+
+        <tr>
+            <td>Oturum sistemi</td>
+            <td>Session ID</td>
+        </tr>
+
+        <tr>
+            <td>Veritabanı</td>
+            <td>Supabase</td>
+        </tr>
+
+        <tr>
+            <td>Aktif oyun kontrolü</td>
+            <td><code>userId</code> üzerinden</td>
+        </tr>
+
+        <tr>
+            <td>Oyun bitince</td>
+            <td>Session otomatik silinir</td>
+        </tr>
+    </table>
+
+</div>
+
+
+<!-- LANGUAGE -->
+
+<div class="endpoint-card">
+
+    <h2>🌍 Dil Seçimi</h2>
+
+    <p class="desc">
+        Dil seçimi yalnızca <code>/api/start</code> endpoint'inde yapılır.
+        Başlatılan oturum seçilen dili korur.
+    </p>
+
+    <div class="language-card">
+        <strong>🇹🇷 TR</strong>
+
+        <p>
+            Türkçe Akinator oyunu başlatır.
+        </p>
+
+        <code>"language": "TR"</code>
+    </div>
+
+    <div class="language-card">
+        <strong>🇬🇧 EN</strong>
+
+        <p>
+            İngilizce Akinator oyunu başlatır.
+        </p>
+
+        <code>"language": "EN"</code>
+    </div>
+
+    <div class="note note-info">
+        <strong>Varsayılan dil:</strong>
+        <code>TR</code>
+        Eğer <code>language</code> gönderilmezse oyun Türkçe başlatılır.
+    </div>
+
+</div>
+
+
+<!-- START -->
+
+<div class="endpoint-card">
+
+    <div class="endpoint-header">
+        <span class="badge-post">POST</span>
+        <span class="endpoint-url">/api/start</span>
+    </div>
+
+    <h3>🎮 Oyunu Başlat</h3>
+
+    <p class="desc">
+        Yeni bir Akinator oturumu oluşturur ve ilk soruyu döndürür.
+        Aynı <code>userId</code> ile aktif bir oyun zaten varsa yeni oyun başlatılmaz.
+    </p>
+
+    <h3>Request Body</h3>
+
+    <div class="grid-2">
+
+        <div class="code-block-wrapper">
+
+            <div class="code-header">
+                Türkçe
             </div>
-            
-            <h3>Oyunu Başlat</h3>
-            <p class="desc">Yeni bir Akinator oturumu başlatır ve sana ilk soruyu döner.</p>
 
-            <div class="grid-2">
-                <div class="code-block-wrapper">
-                    <div class="code-header">İstek (Request Body)</div>
-                    <pre><code>{
-  "userId": "kullanici_123"
+            <pre><code>{
+
+"userId": "TEXASTR",
+"language": "TR"
 }</code></pre>
-                </div>
-                
-                <div class="code-block-wrapper">
-                    <div class="code-header">Başarılı Yanıt (200 OK)</div>
-                    <pre><code>{
+
+        </div>
+
+
+        <div class="code-block-wrapper">
+
+            <div class="code-header">
+                İngilizce
+            </div>
+
+            <pre><code>{
+
+"userId": "TEXASTR",
+"language": "EN"
+}</code></pre>
+
+        </div>
+
+    </div>
+
+
+    <h3 style="margin-top:25px;">
+        Parametreler
+    </h3>
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>Parametre</th>
+                <th>Tip</th>
+                <th>Zorunlu</th>
+                <th>Açıklama</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <tr>
+                <td><code>userId</code></td>
+                <td>String</td>
+                <td>Evet</td>
+                <td>Kullanıcıyı tanımlayan benzersiz ID.</td>
+            </tr>
+
+            <tr>
+                <td><code>language</code></td>
+                <td>String</td>
+                <td>Hayır</td>
+                <td><code>TR</code> veya <code>EN</code>. Varsayılan: <code>TR</code>.</td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+
+    <h3>Başarılı Yanıt</h3>
+
+    <span class="status status-200">200 OK</span>
+
+    <div class="result-box" style="margin-top:10px;">
+
+<pre><code>{
   "success": true,
   "sessionId": "550e8400-e29b-41d4-a716-446655440000",
-  "userId": "TEXASTR ID",
+  "userId": "TEXASTR",
+  "language": "TR",
   "question": "Karakterin gerçek mi?",
+  "answers": [
+    "Evet",
+    "Hayır",
+    "Bilmiyorum",
+    "Muhtemelen Evet",
+    "Muhtemelen Hayır"
+  ],
   "step": 0,
-  "progression": 0.0
-}</code></pre>
-                </div>
-            </div>
-            
-            <div class="note">
-                <strong>Not:</strong> Yanıttaki <code>sessionId</code> değerini kopyalayıp sonraki isteklerde kullanmalısın.
-            </div>
+  "progression": 0
+}</code></pre>    </div>
+
+
+    <div class="note note-warning">
+
+        <strong>Önemli:</strong>
+
+        Yanıttaki <code>sessionId</code> değerini saklamalısın.
+        Oyundaki sonraki cevaplarda bu değer kullanılacaktır.
+
+    </div>
+
+
+    <h3>Aktif Oyun Zaten Varsa</h3>
+
+    <span class="status status-409">409 Conflict</span>
+
+    <div class="result-box" style="margin-top:10px;">
+
+<pre><code>{
+  "success": false,
+  "error": "Bu kullanıcı zaten bir oyunda",
+  "sessionId": "mevcut-session-id"
+}</code></pre>    </div>
+
+    <p class="desc">
+        Bu durumda yeni oyun oluşturulmaz.
+        Kullanıcı mevcut <code>sessionId</code> ile oyuna devam etmelidir.
+    </p>
+
+</div>
+
+
+<!-- ANSWER -->
+
+<div class="endpoint-card">
+
+    <div class="endpoint-header">
+
+        <span class="badge-post">POST</span>
+
+        <span class="endpoint-url">/api/answer</span>
+
+    </div>
+
+
+    <h3>💬 Soruya Cevap Ver</h3>
+
+    <p class="desc">
+
+        Kullanıcının verdiği cevabı Akinator'a gönderir.
+        Akinator yeni bir soru sorarsa yeni soruyu,
+        karakteri bildiyse doğrudan sonucu döndürür.
+
+    </p>
+
+
+    <h3>Request Body</h3>
+
+    <div class="code-block-wrapper">
+
+        <div class="code-header">
+            JSON
         </div>
 
-        <!-- 2. ANSWER ENDPOINT -->
-        <div class="endpoint-card">
-            <div class="endpoint-header">
-                <span class="badge-post">POST</span>
-                <span class="endpoint-url">/api/answer</span>
-            </div>
-            
-            <h3>Soruya Cevap Ver</h3>
-            <p class="desc">Kullanıcının soruya verdiği cevabı iletir ve bir sonraki soruyu (veya oyun bittiyse bitiş bilgisini) alır.</p>
+        <pre><code>{
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>Cevap Kodu (answer)</th>
-                        <th>Anlamı</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td><code>0</code></td><td>Evet</td></tr>
-                    <tr><td><code>1</code></td><td>Hayır</td></tr>
-                    <tr><td><code>2</code></td><td>Bilmiyorum</td></tr>
-                    <tr><td><code>3</code></td><td>Muhtemelen Kısmen (Evet)</td></tr>
-                    <tr><td><code>4</code></td><td>Muhtemelen Değil (Hayır)</td></tr>
-                </tbody>
-            </table>
-
-            <div class="grid-2">
-                <div class="code-block-wrapper">
-                    <div class="code-header">İstek (Request Body)</div>
-                    <pre><code>{
-  "userId": "TEXASTR ID",
-  "sessionId": "550e8400-e29b-41d4...",
-  "answer": 0
+"userId": "TEXASTR",
+"sessionId": "550e8400-e29b-41d4-a716-446655440000",
+"answer": 0
 }</code></pre>
-                </div>
-                
-                <div class="code-block-wrapper">
-                    <div class="code-header">Başarılı Yanıt (200 OK)</div>
-                    <pre><code>{
+
+    </div>
+
+
+    <h3 style="margin-top:25px;">
+        Cevap Kodları
+    </h3>
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>Kod</th>
+                <th>Anlamı</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            <tr>
+                <td><code>0</code></td>
+                <td>Evet</td>
+            </tr>
+
+            <tr>
+                <td><code>1</code></td>
+                <td>Hayır</td>
+            </tr>
+
+            <tr>
+                <td><code>2</code></td>
+                <td>Bilmiyorum</td>
+            </tr>
+
+            <tr>
+                <td><code>3</code></td>
+                <td>Muhtemelen Evet</td>
+            </tr>
+
+            <tr>
+                <td><code>4</code></td>
+                <td>Muhtemelen Hayır</td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+
+    <h3>Oyun Devam Ediyorsa</h3>
+
+    <span class="status status-200">200 OK</span>
+
+    <div class="result-box" style="margin-top:10px;">
+
+<pre><code>{
   "success": true,
   "sessionId": "550e8400-e29b-41d4...",
-  "userId": "TEXASTR ID",
+  "userId": "TEXASTR",
+  "won": false,
   "question": "Karakterin bir YouTuber mı?",
+  "answers": [
+    "Evet",
+    "Hayır",
+    "Bilmiyorum",
+    "Muhtemelen Evet",
+    "Muhtemelen Hayır"
+  ],
   "step": 1,
-  "progression": 4.56,
-  "won": false
-}</code></pre>
-                </div>
-            </div>
+  "progression": 4.56
+}</code></pre>    </div>
 
-            <div class="note">
-                <strong>Oyun Bitişi:</strong> Bu isteği <code>won: false</code> döndüğü sürece yapmalısın. Eğer <code>won: true</code> dönerse karakter bulunmuş demektir, 3. adıma geçebilirsin.
-            </div>
-        </div>
 
-        <!-- 3. RESULT ENDPOINT -->
-        <div class="endpoint-card">
-            <div class="endpoint-header">
-                <span class="badge-post">POST</span>
-                <span class="endpoint-url">/api/result</span>
-            </div>
-            
-            <h3>Sonucu Getir</h3>
-            <p class="desc">Oyun başarıyla bittiğinde (<code>won: true</code> olduğunda) tahmin edilen karakterin bilgilerini getirir.</p>
+    <div class="note note-info">
 
-            <div class="grid-2">
-                <div class="code-block-wrapper">
-                    <div class="code-header">İstek (Request Body)</div>
-                    <pre><code>{
-  "sessionId": "550e8400-e29b-41d4..."
-}</code></pre>
-                </div>
-                
-                <div class="code-block-wrapper">
-                    <div class="code-header">Başarılı Yanıt (200 OK)</div>
-                    <pre><code>{
+        <strong>Devam:</strong>
+
+        <code>won: false</code> geldiği sürece kullanıcı
+        aynı <code>sessionId</code> ile tekrar
+        <code>/api/answer</code> çağırmalıdır.
+
+    </div>
+
+
+    <h3>🏆 Akinator Karakteri Bildiyse</h3>
+
+    <p class="desc">
+
+        Akinator karakteri bildiğinde artık
+        <code>/api/result</code> çağrısı yapılmaz.
+
+        Sonuç doğrudan bu endpoint tarafından döndürülür.
+
+    </p>
+
+
+    <span class="status status-200">200 OK</span>
+
+    <div class="result-box" style="margin-top:10px;">
+
+<pre><code>{
   "success": true,
+  "sessionId": "550e8400-e29b-41d4...",
+  "userId": "TEXASTR",
+  "won": true,
   "result": {
     "id": "12345",
     "name": "Barış Özcan",
     "description": "YouTuber",
     "absolute_picture_path": "https://resim-linki..."
   }
-}</code></pre>
-                </div>
-            </div>
-        </div>
+}</code></pre>    </div>
+
+
+    <div class="note note-success">
+
+        <strong>Oyun tamamlandı.</strong>
+
+        <br><br>
+
+        <code>won: true</code> geldiğinde karakter bulunmuştur.
+        API sonucu doğrudan gönderir ve tamamlanan oyun oturumunu
+        Supabase'den siler.
+
+        <br><br>
+
+        Bu nedenle tekrar <code>/api/result</code> çağırmana gerek yoktur.
+
     </div>
 
-</body>
+</div>
+
+
+<!-- GAME FLOW -->
+
+<div class="endpoint-card">
+
+    <h2>🔄 Tam Oyun Akışı</h2>
+
+    <p class="desc">
+        Uygulamanın API'yi kullanması şu şekilde olmalıdır:
+    </p>
+
+
+    <div class="result-box">
+
+<pre><code>1. POST /api/start
+        ↓
+2. sessionId alınır
+        ↓
+3. Soru kullanıcıya gösterilir
+        ↓
+4. Kullanıcı cevap verir
+        ↓
+5. POST /api/answer
+        ↓
+   ┌───────────────────────┐
+   │                       │
+   │ won: false            │ won: true
+   ↓                       ↓
+Yeni soru gelir          Karakter bulundu
+   │                       │
+   └──────→ Tekrar          ↓
+            /answer       result gelir
+                           ↓
+                        Oyun biter
+                           ↓
+                    Session silinir</code></pre>    </div>
+
+</div>
+
+
+<!-- ERRORS -->
+
+<div class="endpoint-card">
+
+    <h2>⚠️ Hata Kodları</h2>
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>HTTP</th>
+                <th>Anlamı</th>
+                <th>Örnek</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            <tr>
+                <td>
+                    <span class="status status-400">400</span>
+                </td>
+
+                <td>
+                    Hatalı istek
+                </td>
+
+                <td>
+                    Eksik parametre veya geçersiz cevap kodu
+                </td>
+            </tr>
+
+
+            <tr>
+                <td>
+                    <span class="status status-409">409</span>
+                </td>
+
+                <td>
+                    Kullanıcının zaten aktif oyunu var
+                </td>
+
+                <td>
+                    Aynı <code>userId</code> ile ikinci oyun
+                </td>
+            </tr>
+
+
+            <tr>
+                <td>
+                    <span class="status status-500">500</span>
+                </td>
+
+                <td>
+                    Sunucu/API hatası
+                </td>
+
+                <td>
+                    Akinator veya Supabase hatası
+                </td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<!-- EXAMPLE -->
+
+<div class="endpoint-card">
+
+    <h2>🧪 Örnek Kullanım</h2>
+
+    <h3>1. Türkçe Oyun Başlat</h3>
+
+    <div class="code-block-wrapper">
+
+        <pre><code>POST /api/start
+
+{
+"userId": "TEXASTR",
+"language": "TR"
+}</code></pre>
+
+    </div>
+
+
+    <h3 style="margin-top:25px;">
+        2. Cevap Gönder
+    </h3>
+
+    <div class="code-block-wrapper">
+
+        <pre><code>POST /api/answer
+
+{
+"userId": "TEXASTR",
+"sessionId": "SESSION_ID",
+"answer": 0
+}</code></pre>
+
+    </div>
+
+
+    <h3 style="margin-top:25px;">
+        3. Yeni Soru Gelirse
+    </h3>
+
+    <p class="desc">
+        Aynı <code>sessionId</code> ile tekrar
+        <code>/api/answer</code> çağrılır.
+    </p>
+
+
+    <h3 style="margin-top:25px;">
+        4. Akinator Bildiğinde
+    </h3>
+
+    <p class="desc">
+
+        <code>won: true</code> gelir ve
+        <code>result</code> içerisinde karakter bilgisi bulunur.
+
+        <br><br>
+
+        Bundan sonra API'ye başka bir sonuç isteği gönderilmez.
+
+    </p>
+
+</div>
+
+
+<!-- IMPORTANT -->
+
+<div class="endpoint-card">
+
+    <h2>🔐 Session ve Kullanıcı Sistemi</h2>
+
+    <p class="desc">
+
+        Her oyun bir <code>sessionId</code> ile takip edilir.
+
+        <code>userId</code> ise bu oturumun hangi kullanıcıya ait olduğunu belirtir.
+
+    </p>
+
+    <ul>
+
+        <li>
+            Her oyun için benzersiz bir <code>sessionId</code> oluşturulur.
+        </li>
+
+        <li>
+            Aynı kullanıcı aynı anda ikinci oyun başlatamaz.
+        </li>
+
+        <li>
+            Cevaplar <code>userId + sessionId</code> ile doğrulanır.
+        </li>
+
+        <li>
+            Oyun devam ederken Akinator oturum bilgisi Supabase'de saklanır.
+        </li>
+
+        <li>
+            Akinator karakteri bildiğinde sonuç doğrudan <code>/api/answer</code> üzerinden gelir.
+        </li>
+
+        <li>
+            Oyun tamamlandığında session Supabase'den silinir.
+        </li>
+
+    </ul>
+
+</div>
+
+
+<!-- ENDPOINT SUMMARY -->
+
+<div class="endpoint-card">
+
+    <h2>📋 Endpoint Özeti</h2>
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>Endpoint</th>
+                <th>Metot</th>
+                <th>Açıklama</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            <tr>
+                <td><code>/api/start</code></td>
+                <td>POST</td>
+                <td>Yeni oyun başlatır.</td>
+            </tr>
+
+            <tr>
+                <td><code>/api/answer</code></td>
+                <td>POST</td>
+                <td>Cevap gönderir, yeni soru veya sonucu döndürür.</td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+    <div class="note note-success">
+
+        <strong>✅ Güncel API:</strong>
+
+        <br><br>
+
+        Artık yalnızca iki ana endpoint kullanılmaktadır:
+
+        <br><br>
+
+        <code>POST /api/start</code>
+
+        <br>
+
+        <code>POST /api/answer</code>
+
+        <br><br>
+
+        <code>/api/result</code> kaldırılmıştır.
+
+    </div>
+
+</div>
+
+
+<footer>
+
+    Akinator API • Node.js • Supabase
+
+</footer>
+
+</div></body>
 </html>
